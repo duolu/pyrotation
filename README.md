@@ -55,17 +55,23 @@ Then the demo with quaternion is shown.
 
 ![angle-axis annotation.](figures/angle_axis_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
+The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used.
+
 ### Demo of Euler Angles Representation of a 3D Rotation
 
-// TODO
+![euler annotation.](figures/euler_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
+
+The three Euler angles can be directly controlled by the three sliders.
 
 ### Demo of Rotation Matrix Representation of a 3D Rotation
 
-// TODO
+![rotation matrix annotation.](figures/rotation_matrix_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
 
 ### Demo of Quaternion Representation of a 3D Rotation
 
-// TODO
+![quaternion annotation.](figures/quaternion_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/quaternion.gif" width="350">
+
+The four components of the unit quaternion can be directly controlled by the four sliders. Note that since it is a the four components are coupled and the user can not change one component without influence to others. This demo program provides two manipulations in general: (1) Changing the rotation angle while maintaining the axis, by manipulating qw, or (2) Changing the axis direction while maintaining the angle, by manipulating qx, qy, qz and setting qw to 0.
 
 
 ## Basic Usage of pyrotation
