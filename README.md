@@ -1,10 +1,18 @@
 # pyrotation
 This repository is a Python package to help teach and learn the math of 3D rotation. It has two modules:
 
-* [pyrotation.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation.py) - contains the core class and routines for representation and operation of 3D rotation.
 * [pyrotation_demo.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation_demo.py) - contains GUI based interactive demo of 3D rotation of reference frame.
+* [pyrotation.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation.py) - contains the core class and routines for representation and operation of 3D rotation.
 
 Both modules are tested on Python 3.5+.
+
+
+## pyrotation_demo.py
+
+The **pyrotation_demo** module provides four interactive GUI visualizers based on the matplotlib, corresponding to the four representations of the 3D rotation. Users can drag sliders to directly change parameters of the representation and the corresponding rotation of reference frame is shown in real-time. 
+
+This module requires numpy, matplotlib, and the **pyrotation** module. 
+
 
 ## pyrotation.py
 
@@ -17,11 +25,6 @@ The **pyrotation** module provides four different representations of a 3D rotati
 
 This module requires numpy. 
 
-## pyrotation_demo.py
-
-The **pyrotation_demo** module provides four interactive GUI visualizers based on the matplotlib, corresponding to the four representations of the 3D rotation. Users can drag sliders to directly change parameters of the representation and the corresponding rotation of reference frame is shown in real-time. 
-
-This module requires numpy and matplotlib. 
 
 # Getting Started
 
@@ -46,21 +49,21 @@ For example, if the following command is used,
 
 	$ python3 ./pyrotation_demo.py q
 
-the demo with quaternion is shown.
+Then the demo with quaternion is shown.
 
-### Demo of Angle-Axis Representation
-
-// TODO
-
-### Demo of Euler Angles Representation
+### Demo of Angle-Axis Representation of a 3D Rotation
 
 // TODO
 
-### Demo of Rotation Matrix Representation
+### Demo of Euler Angles Representation of a 3D Rotation
 
 // TODO
 
-### Demo of Quaternion Representation
+### Demo of Rotation Matrix Representation of a 3D Rotation
+
+// TODO
+
+### Demo of Quaternion Representation of a 3D Rotation
 
 // TODO
 
