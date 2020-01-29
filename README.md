@@ -6,6 +6,7 @@ This repository is a Python package to help teach and learn the math of 3D rotat
 
 Both modules are tested on Python 3.5+.
 
+See the [slides](https://docs.google.com/presentation/d/1Xv72RjoL_4scx613WTR3YDfh70VPxslJ42-XyDsqbac/edit?usp=sharing) to learn the representations of 3D rotation.
 
 ## pyrotation_demo.py
 
@@ -66,6 +67,9 @@ The three Euler angles can be directly controlled by the three sliders.
 ### Demo of Rotation Matrix Representation of a 3D Rotation
 
 ![rotation matrix annotation.](figures/rotation_matrix_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
+
+The three basis vectors of the rotated reference frame can be directly controlled (i.e., the three columns of the rotation matrix). Note that they are three orthonormal vectors and hence, two of them are enough to uniquely determine the rotation. This demo program provides three modes: (1) "ux-uy", i.e., manipulating the new x-axis and y-axis, (2) "uy-uz", i.e., manipulating the new y-axis and z-axis, (3) "uz-ux", i.e., manipulating the new z-axis and x-axis. It is generally difficult to directly manipulate 3D vectors through the UI, instead, this demo program uses alt-azimuth angles to control the direction of the basis vectors (they are unit vectors so direction would be enough and the length does not matter).
+
 
 ### Demo of Quaternion Representation of a 3D Rotation
 
