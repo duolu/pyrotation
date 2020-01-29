@@ -53,7 +53,7 @@ Then the demo with quaternion is shown.
 
 ### Demo of Angle-Axis Representation of a 3D Rotation
 
-![angle-axis annotation.](figures/angle_axis_annotated.png) ![angle-axis demo.](figures/angle_axis.gif)
+![angle-axis annotation.](figures/angle_axis_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
 ### Demo of Euler Angles Representation of a 3D Rotation
 
