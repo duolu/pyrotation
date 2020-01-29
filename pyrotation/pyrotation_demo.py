@@ -1633,7 +1633,7 @@ if __name__ == '__main__':
     
         vis = EulerZYXVisualizer3D()
         
-    elif mode == 'r' or mode == 'rotation_matrix':
+    elif mode == 'r' or mode == 'R' or mode == 'rotation_matrix':
         
         vis = RotationMatrixVisualizer3D()
         
@@ -1641,6 +1641,10 @@ if __name__ == '__main__':
         
         vis = QuaternionVisualizer3D()
     
+    else:
+        
+        print_usage()
+        exit()
     
     
     vis.run()
