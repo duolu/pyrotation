@@ -53,7 +53,7 @@ Then the demo with quaternion is shown.
 
 ### Demo of Angle-Axis Representation of a 3D Rotation
 
-// TODO
+![angle-axis annotation.](figures/angle_axis_annotated.png)
 
 ### Demo of Euler Angles Representation of a 3D Rotation
 
