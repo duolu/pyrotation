@@ -37,10 +37,16 @@ Put both **pyrotation.py** and **pyrotation_demo.py**
 
 The "mode" can be one of the following:
 
-* "u" or "angle - angle-axis (default if mode is not given)
-* e - Euler angles (in z-y'-x" intrinsic convention)
-* r - rotation matrix
-* q - unit quaternion
+* "u" or "angle_axis" - angle-axis (default if mode is not given)
+* "e" or "euler" - Euler angles (in z-y'-x" intrinsic convention)
+* "r" or "R" or "rotation_matrix" - rotation matrix
+* "q" or "quaternion" - unit quaternion
+
+For example, if the following command is used,
+
+	$ python3 ./pyrotation_demo.py q
+
+the demo with quaternion is shown.
 
 ### Demo of Angle-Axis Representation
 
