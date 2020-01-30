@@ -52,7 +52,7 @@ For example, if the following command is used,
 
 Then the demo with quaternion is shown. 
 
-Some common explanations of the demo GUI are shown as follows.
+**Common explanations**:
 
 1. In all demoes, the axes uses this color settings.
 
@@ -68,7 +68,7 @@ Some common explanations of the demo GUI are shown as follows.
 
 ![angle-axis annotation.](figures/angle_axis_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
-Explanations:
+**Explanations**:
 
 1. In the demo GUI, the rotation axis is represented in a dotted and dashed line through the origin. The rotation vector, i.e., the vector **u**, is shown as a solid black arrow on the axis. The projection of the axis on the ground is shown as a dotted line. 
 
@@ -83,7 +83,7 @@ Explanations:
 
 ![euler annotation.](figures/euler_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
 
-Explanations:
+**Explanations**:
 
 1. Yaw angle is shown as a blue arc on the ground, pointing from the x-axis of the original frame to the projection of the rotated x-axis on the ground.
 
@@ -99,9 +99,9 @@ Explanations:
 
 ![rotation matrix annotation.](figures/rotation_matrix_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
 
-Explanations:
+**Explanations**:
 
-1. To construct a rotation matrix, three orthonormal basis vectors of the rotated reference frame are needed. However, since these three basis vectors are orthonormal, once two vectors are given (or one plane and a vector on the plane are given), the three basis vectors and the rotation matrix can be uniquely determined. This demo provides three modes:
+1. To construct a rotation matrix, three orthonormal basis vectors of the rotated reference frame are needed. However, since these three basis vectors are orthonormal, once two vectors are given (or one plane and a vector on the plane are given), the three basis vectors and the rotation matrix can be uniquely determined. This demo provides three modes as follows, and the current mode can be changed using the two buttons with "<-" and "->" arrows.
 
 	1. "ux-uy", where the "ux" vector is the x-axis of the rotated reference frame, and "ux" and "uy" vectors together defines the XOY plane of the rotated reference frame. This plane is shown as a dashed circle. In this mode, "ux" is shown as a solid red line (i.e., the x-axis after rotation), and "uy" is shown as a dashed green line.
 	
@@ -118,7 +118,17 @@ Explanations:
 
 ![quaternion annotation.](figures/quaternion_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/quaternion.gif" width="350">
 
-The four components of the unit quaternion can be directly controlled by the four sliders. Note that since it is a the four components are coupled and the user can not change one component without influence to others. This demo program provides two manipulations in general: (1) Changing the rotation angle while maintaining the axis, by manipulating qw, or (2) Changing the axis direction while maintaining the angle, by manipulating qx, qy, qz and setting qw to 0.
+**Explanations**:
+
+1. The rotation angle-axis, i.e., the vector **u**, corresponding to the unit quaternion is shown as a solid black arrow. The YOZ plane of the rotated reference frame is shown as a dashed circle.
+
+1. The four components of the unit quaternion can be directly controlled by the four sliders. However, it is not straightforward to manuplate a quaternion to a rotation that the user desires. Since it is a unit quaternion, the four components are coupled and the user can not change one component without influence to others. This demo program provides three ways as follows. 
+
+	1. Changing the rotation angle while maintaining the axis, using the slider of qw. In this case, the other three components of the quaternion will be updated porpotionally to keep the direction of the rotation axis.
+	
+	1. Changing the axis direction while maintaining the angle (always to pi), by changing one of qx, qy, and qz. In this case, qw is always set to 0, while the the other two components not directly changed using the sliders are nonzero and updated propotionally. This allows the rotation axis, the axis changed by the sliders, as well as the corresponding axis of the original reference frame always stay in the same plane. For example, if the slider of qx is changed while qy and qz are nonzero, the rotation axis, the original x-axis, and the x-axis after rotation are in the same plane. The other two axes also keep this same coplaner property when the rotation axis is changed.
+	
+	1. Rotation along one of the axes of the original reference frame, by changing one of qx, qy, and qz. In this case, qw is always set to 0, while the other two components are also zero.
 
 
 ## Basic Usage of pyrotation
