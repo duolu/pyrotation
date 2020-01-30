@@ -31,11 +31,11 @@ This module requires numpy. In all cases, coordinate of a 3D point is represente
 
 ## Installation
 
-Just download pyrotation.py and pyrotation_demo.py and run.
+Just download pyrotation.py and pyrotation_demo.py, and run.
 
-## Basic Usage of pyrotation_demo
+## Usage of the pyrotation_demo module
 
-Put both **pyrotation.py** and **pyrotation_demo.py**
+Put both **pyrotation.py** and **pyrotation_demo.py** into the same folder, and launch the demo using the following command.
 
 	$ python3 ./pyrotation_demo.py [mode]
 
@@ -64,7 +64,7 @@ Then the demo with quaternion is shown.
 
 1. A solid disk on the XOY plane in the original reference frame is shown to represent the "ground"
 
-### Demo of Angle-Axis Representation of a 3D Rotation
+### Demo of the Angle-Axis Representation of a 3D Rotation
 
 ![angle-axis annotation.](figures/angle_axis_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
@@ -79,7 +79,7 @@ Then the demo with quaternion is shown.
 1. The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown). The rotation angle is in `[-180, +180]` degrees, the alt angle is in `[-90, +90]` degrees, and the azimuth angle is in `[-180, +180]` degrees.
 
 
-### Demo of Euler Angles Representation of a 3D Rotation
+### Demo of the Euler Angles Representation of a 3D Rotation
 
 ![euler annotation.](figures/euler_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
 
@@ -95,7 +95,7 @@ Then the demo with quaternion is shown.
 
 1. The three Euler angles can be directly controlled by the three sliders. All three angles are in `[-180, +180]` degrees. Even in the gimbal lock case, where the pitch angle is -90 degree or +90 degree, the yaw angle and the roll angle can be independently controlled, though their effects would be indistinguishable in this case.
 
-### Demo of Rotation Matrix Representation of a 3D Rotation
+### Demo of the Rotation Matrix Representation of a 3D Rotation
 
 ![rotation matrix annotation.](figures/rotation_matrix_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
 
@@ -114,7 +114,7 @@ Then the demo with quaternion is shown.
 1. The projection of the two control vectors on the ground are shown as dotted lines with their corresponding colors. They are derived from the azimuth angles. The alt angles are in `[-90, +90]` degrees, and the azimuth angles are in `[-180, +180]` degrees.
 
 
-### Demo of Quaternion Representation of a 3D Rotation
+### Demo of the Unit Quaternion Representation of a 3D Rotation
 
 ![quaternion annotation.](figures/quaternion_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/quaternion.gif" width="350">
 
@@ -131,7 +131,41 @@ Then the demo with quaternion is shown.
 	1. Rotation along one of the axes of the original reference frame, by changing one of qx, qy, and qz. In this case, qw is always set to 0, while the other two components are also zero.
 
 
-## Basic Usage of pyrotation
+## Usage of the pyrotation module
+
+### General Usage
+
+First, import the pyrotation module.
+
+	>>> import pyrotation
+
+For angle-axis, Euler angles, and rotation matrix, they use just builtin Python types and Numpy types, i.e., no custom class are defined. For quaternion, a custome `Quaternion` class is defined.
+
+### Handling Singularity
+
+This module defines a value `EPSILON`, which is considered as the precision required for floating point comparison. For example, if a floating point number `a` is less than `EPSILON`, `a` is considered as zero when handling singularity. In the following documentation, "if `a` is zero" generally means "if `a` is less than `EPSILON`" in the code.
+
+### Angle-Axis
+
+* Use the `alt_azimuth_to_axis(alt_degree, azimuth_degree) -> u` function to create a unit vector `u` representing an axis from alt-azimuth angles in degrees. Note that the alt-azimuth angles are not restricted to be within a range. However, typically `alt_degree` should be in `[-90, +90]` degrees and `azimuth_degree` should be in `[-180, +180]` degrees.
+
+* Use the `axis_to_alt_azimuth(u) -> (alt_degree, azimuth_degree, gimbal_lock, degenerated)` function to conver an axis vector `u` to alt-azimuth angles in degrees. If the length of `u` is zero, the `degenerated` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree. If `u` is nonzero but pointing to the z-axis or the opposite of the z-axis, the `gimbal_lock` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree.
+
+* Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays. Similarly, use `rotate_points_by_angle_axis(ps, u) - rps` to rotate points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+
+* Use the `angle_axis_to_rotation_matrix(u) -> R` function to convert an angle-axis `u` to a rotation matrix `R`. If the length of `u` is zero, the identity matrix is returned.
+
+* Use the `rotation_matrix_to_angle_axis(R) -> u` function to convert a rotation matrix `R` to an angle-axis `u`. If `R` is the identity matrix, `u` is all zero.
+
+### Euler Angles
+
+// TODO
+
+### Rotation Matrix
+
+// TODO
+
+### Unit Quaternion
 
 // TODO
 
