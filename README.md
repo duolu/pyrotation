@@ -151,9 +151,9 @@ This module defines a value `EPSILON`, which is considered as the precision requ
 
 * Use the `axis_to_alt_azimuth(u) -> (alt_degree, azimuth_degree, gimbal_lock, degenerated)` function to conver an axis vector `u` to alt-azimuth angles in degrees. If the length of `u` is zero, the `degenerated` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree. If `u` is nonzero but pointing to the z-axis or the opposite of the z-axis, the `gimbal_lock` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree.
 
-* Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
+* Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` and obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
 
-* Use the `rotate_points_by_angle_axis(ps, u) - rps` function to rotate an array of points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+* Use the `rotate_points_by_angle_axis(ps, u) - rps` function to rotate an array of points `ps` by an angle-axix rotation `u` and obtain the rotated array of points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
 
 * Use the `angle_axis_to_rotation_matrix(u) -> R` function to convert an angle-axis `u` to a rotation matrix `R`. If the length of `u` is zero, the identity matrix is returned.
 
@@ -167,23 +167,62 @@ This module defines a value `EPSILON`, which is considered as the precision requ
 
 ### Rotation Matrix
 
-* Use the `rotate_a_point_by_rotation_matrix(R, p) -> rp` function to rotate a point `p` by a rotation matrix `R` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
+* Use the `rotate_a_point_by_rotation_matrix(R, p) -> rp` function to rotate a point `p` by a rotation matrix `R` and obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
 
 
-* Use the `rotate_points_by_rotation_matrix(R, ps) -> rps` function to rotate an array of points `ps` by a rotation matrix `R` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+* Use the `rotate_points_by_rotation_matrix(R, ps) -> rps` function to rotate an array of points `ps` by a rotation matrix `R` and obtain the rotated array of points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
 
 
-* `normalize_rotation_matrix(R) -> Rn`
+* Use the `normalize_rotation_matrix(R) -> Rn` function to normalize a rotation matrix `R` to obtain a normalized matrix `Rn`. This function uses SVD.
 
 
-* `rotation_matrix_from_orthonormal_basis(ux, uy, uz) -> R`
+* Use the `rotation_matrix_from_orthonormal_basis(ux, uy, uz) -> R` function to construct a rotation matrix `R` from three orthonormal basis vectors `(ux, uy, uz)`.
 
-* `orthonormal_basis_from_two_vectors(v1, v2, v1_default, v2_default) -> (u1, u2, u3)`
+* Use the `orthonormal_basis_from_two_vectors(v1, v2, v1_default, v2_default) -> (u1, u2, u3)` function to construct three orthonormal basis vectors `(u1, u2, u3)` from a pair of vector `(v1, v2)`, where `u1` is in the direction of `v1`, `u2` is in the plane defined by `v1` and `v2`, and `u3` is orthogonal to the plane of `v1` and `v2`. In the degenerated case 1, where `v1` is all zero, `v1_default` is used instead. In the degenerated case 2, where `v2` is all zero or `v2` is in the same direction as `v1`, `v2_default` is used instead. There three helper functions based this one.
+
+	* `rotation_matrix_from_xy(x, y) -> R`, i.e., constructing a rotation matrix `R` given two vectors representing the x-axis and the y-axis. 
+	* `rotation_matrix_from_yz(y, z) -> R`, i.e., constructing a rotation matrix `R` given two vectors representing the y-axis and the z-axis. 
+	* `rotation_matrix_from_zx(z, x) -> R`, i.e., constructing a rotation matrix `R` given two vectors representing the z-axis and the x-axis. 
+
+For these three helper functions, the first axis is always in the same direction of the first provided vector. If the second provided vector is not orthogonal to the vector, a vector on the plane defined by these two vectors that is orthogonal the first vector is constructed as the the second axis. The third axis is always perpendiculer to the plan defined by the two provided vectors. The reference frame is always right-handed.
+
 
 ### Unit Quaternion
 
-// TODO
+A unit quaternion is represented by an object of the class `Quaternion` defined in this module. The quaternion object is immutable after construction. All operations will return a new quaternion object instead of changing itself.
 
+Some useful object methods are shown as follows.
 
+* Use `q.norm() -> n` to get the norm of the quaternion `q`.
+
+* Use `q.conjugate() -> qc` to get the conjugate of the quaternion `q`, i.e., if `q` is (w, x, y, z), `qc` is (w, -x, -y, -z).
+
+* Use `q.inverse() -> qi` to get the inverse of the quaternion `q`.
+
+* Use `q.negate() -> qn` to get the negate of the quaternion `q`, i.e., if `q` is (w, x, y, z), `qn` is (-w, -x, -y, -z).
+
+* Use `q1.multiply_quaternion(self, q2) -> q3` to get the composition of `q1` and `q2` as `q3`, i.e., `q3` = `q1` * `q2`, where "*" is quaternion multiplication. Note that `q1` * `q2` is generally not equal to `q2` * `q1`.
+
+For the following methods, `q` must be a unit quaternion and this method does not check that. If `q` is not a unit quaternion the results would be wrong.
+
+* Use `q.rotate_a_point(p) -> rp` to rotate a point `p` by a unit quaternion `q` and obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
+
+* Use `q.rotate_points(ps) -> rps` to rotate an array of points `ps` by a unit quaternion `q` and obtain the rotated array of points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points. 
+
+* Use `q.to_angle_axis() -> u` to convert a unit quaternion `q` to an angle-axis `u`.
+
+* Use `q.to_rotation_matrix() -> R` to convert a unit quaternion `q` to a rotation matrix `R`.
+
+Some useful class methods are shown as follows.
+
+* Use `Quaternion.identity() -> qi` to construct the identity unit quaternion `qi`, i.e., (1, 0, 0, 0).
+
+* Use `Quaternion.construct_from_angle_axis(u) -> q` to convert an angle-axis `u` to a unit quaternion `q`. In the degenerated case where `u` is all zero, the identity quaternion is returned.
+
+* Use `Quaternion.construct_from_rotation_matrix(R) -> q` to convert a rotation matrix `R` to a unit quaternion `q`.
+
+* Use `Quaternion.interpolate(q0, q1, t) -> q` to obtain a spherical linear interpolation (SLERP) of two unit quaternions `q0` and `q1` given a parameter `t`. If `t` is 0, `q0` is returned, and if `t` is 1, `q1` is returned. If `t` is between 0 and 1, a unit quaternion `q` representing a rotation continuously from the orientation `q0` to the orientation `q1` at the fraction `t` is returned.
+
+More quaternion kinematics will be implemented in the future.
 
 
