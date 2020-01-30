@@ -151,7 +151,9 @@ This module defines a value `EPSILON`, which is considered as the precision requ
 
 * Use the `axis_to_alt_azimuth(u) -> (alt_degree, azimuth_degree, gimbal_lock, degenerated)` function to conver an axis vector `u` to alt-azimuth angles in degrees. If the length of `u` is zero, the `degenerated` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree. If `u` is nonzero but pointing to the z-axis or the opposite of the z-axis, the `gimbal_lock` flag is set to `True`, `alt_degree` is set to +90 degrees, and `azimuth_degree` is set to 0 degree.
 
-* Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays. Similarly, use `rotate_points_by_angle_axis(ps, u) - rps` to rotate points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+* Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
+
+* Use the `rotate_points_by_angle_axis(ps, u) - rps` function to rotate points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
 
 * Use the `angle_axis_to_rotation_matrix(u) -> R` function to convert an angle-axis `u` to a rotation matrix `R`. If the length of `u` is zero, the identity matrix is returned.
 
