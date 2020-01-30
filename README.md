@@ -52,7 +52,7 @@ For example, if the following command is used,
 
 Then the demo with quaternion is shown. 
 
-Some common explanations of the demo GUI are shown as follows
+Some common explanations of the demo GUI are shown as follows.
 
 1. In all demoes, the axes uses this color settings.
 
@@ -68,7 +68,7 @@ Some common explanations of the demo GUI are shown as follows
 
 ![angle-axis annotation.](figures/angle_axis_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
-Explanations.
+Explanations:
 
 1. In the demo GUI, the rotation axis is represented in a dotted and dashed line through the origin. The rotation vector, i.e., the vector **u**, is shown as a solid black arrow on the axis. The projection of the axis on the ground is shown as a dotted line. 
 
@@ -76,14 +76,24 @@ Explanations.
 
 1. Note that this axis is always throught the origin. An arbitrary rotation with an axis not going through the origin can be decomposed into a translation from a point on the axis to the origin, a rotation with an axis through the origin, and another translation back to the point.
 
-1. The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown).
+1. The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown). The rotation angle is in `[-180, +180]` degrees, the alt angle is in in `[-90, +90]` degrees, and the azimuth angle is in `[-180, +180]` degrees.
 
 
 ### Demo of Euler Angles Representation of a 3D Rotation
 
 ![euler annotation.](figures/euler_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
 
-The three Euler angles can be directly controlled by the three sliders.
+Explanations:
+
+1. Yaw angle is shown as a blue arc on the ground, pointing from the x-axis of the original frame to the projection of the rotated x-axis on the ground.
+
+1. Pitch angle is shown as a green arc, pointing from where the yaw angle arc ends to the rotated x-axis, i.e., from the tip of the projection of the rotated x-axis on the ground, which is shown as a dotted red line, to the tip of the rotated x-axis.
+
+1. Roll angle is shown as a red arc in the rotated YOZ plane on a dashed circle, pointing from the tip of the projection of the rotated y-axis on the ground, which is shown as a dotted green line, to the tip of the rotated y-axis.
+
+1. The projection of the z-axis of the original reference frame on the YOZ plane of the rotated reference frame is shown as a dotted blue line.
+
+1. The three Euler angles can be directly controlled by the three sliders. All three angles are in `[-180, +180]` degrees. Even in the gimbal lock case, where the pitch angle is -90 degree or +90 degree, the yaw angle and the roll angle can be independently controlled, though their effects would be indistinguishable in this case.
 
 ### Demo of Rotation Matrix Representation of a 3D Rotation
 
