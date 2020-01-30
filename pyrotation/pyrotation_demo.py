@@ -1402,13 +1402,13 @@ class QuaternionVisualizer3D(RotationVisualizer3D):
             style='--', cx='r', cy='g', cz='b', arrow=False, method='q')
 
 #         self.plot_circle(self.ax3d, self.q, O, r, 
-#                          plane='xoy', style='--', color='b', method='q')
+#                          plane='xoy', style='--', color='k', method='q')
 
         self.plot_circle(self.ax3d, self.q, O, r, 
                          plane='yoz', style='--', color='k', method='q')
 
 #         self.plot_circle(self.ax3d, self.q, O, r, 
-#                          plane='zox', style='--', color='g', method='q')
+#                          plane='zox', style='--', color='k', method='q')
 
         # Plot the rotated axes.        
         self.plot_xyz_axes(self.ax3d, self.q, O, scale=scale,

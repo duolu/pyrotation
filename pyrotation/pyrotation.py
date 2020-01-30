@@ -81,6 +81,250 @@ def skew_symmetric_matrix_to_vector(M):
     
     return np.asarray((x, y, z))
 
+
+# --------------------- angle-axis / alt-azimuth-angle --------------------
+
+
+def alt_azimuth_to_axis(alt_degree, azimuth_degree):
+    '''
+    Calculate an axis represented by a unit vector using alt and azimuth 
+    angles.
+    
+    NOTE: alt and azimuth are in degree, not radian. The output axis
+    is always a unit vector.
+    '''
+    
+    alt_radian = alt_degree * np.pi / 180
+    azimuth_radian = azimuth_degree * np.pi / 180
+    
+    ux = cos(alt_radian) * cos(azimuth_radian)
+    uy = cos(alt_radian) * sin(azimuth_radian)
+    uz = sin(alt_radian)
+    
+    u = np.asarray((ux, uy, uz))
+    u = u / np.linalg.norm(u)
+
+    return u
+
+def axis_to_alt_azimuth(u):
+    '''
+    Calculate the alt and azimuth angles from an axis vector "u".
+    
+    NOTE: alt and azimuth are in degree, not radian.
+    
+    CAUTION: In the degenerated case, where the norm of the vector u is zero,
+    i.e., the vector u is pointting to the z-axis or the opposite of the 
+    z-axis, the output alt is set to plus/minus 90 degrees and the azimuth to
+    zero degrees.
+    
+    '''
+    
+    u_norm = np.linalg.norm(u)
+    
+    if fabs(fabs(u_norm) - 1) < EPSILON:
+        
+        degenerated = True
+
+        alt = 90
+        azimuth = 0
+        
+        gimbal_lock = False
+        
+    else:
+        
+        degenerated = False
+        
+        u = u / u_norm
+    
+        if fabs(u[2] - 1) < EPSILON:
+            
+            # CAUTION: if u is pointing to the z-axis, the result is degenerated,
+            # i.e., azimuth is undefined.
+            
+            alt = 90
+            azimuth = 0
+            
+            gimbal_lock = True
+            
+        elif fabs(u[2] + 1) < EPSILON:
+            
+            # Similarly, if u is pointing to the opposite of the z-axis, azimuth is
+            # also undefined.
+            
+            alt = -90
+            azimuth = 0
+    
+            gimbal_lock = True
+            
+        else:
+            
+            alt = asin(u[2])
+            
+            c = cos(alt)
+            
+            dx = u[0] / c
+            dy = u[1] / c
+    
+            azimuth = atan2(dy, dx)
+            
+            alt = alt * 180 / pi
+            azimuth = azimuth * 180 / pi
+            
+            gimbal_lock = False
+
+    return alt, azimuth, gimbal_lock, degenerated
+
+def rotate_a_point_by_angle_axis(p, u):
+    '''
+    Rotate a point "p" along the axis "u" by an angle which is the norm of "u".
+    Both "p" and "u" are numpy arrays of three elements.
+    
+    CAUTION: For numerical stability, small angle rotations are considered
+    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
+    
+    '''
+
+    angle = np.linalg.norm(u)
+
+    if fabs(angle) < EPSILON:
+        
+        return p
+    
+    else:
+
+        # normalize the axis vector
+        u = u / np.linalg.norm(u)
+    
+        pp = np.dot(p, u) * u
+        pv = p - pp
+        
+        u_x_cross = np.cross(u, p)
+        
+        rp = pp + pv * np.cos(angle) + u_x_cross * np.sin(angle)
+    
+        return rp
+
+def rotate_points_by_angle_axis(ps, u):
+    '''
+    Rotate points "ps" along the axis "u" by an angle which is the norm of "u".
+    "ps" must a numpy 3-by-n array, and u must a numpy array of three elements.
+    
+    CAUTION: For numerical stability, small angle rotations are considered
+    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
+    
+    CAUTION: The input "ps" is now an array of vectors, where each vector is a
+    column.
+    
+    '''
+
+    angle = np.linalg.norm(u)
+
+    if fabs(angle) < EPSILON:
+        
+        return ps
+    
+    else:
+
+        # normalize the axis vector
+        u = u / np.linalg.norm(u)
+    
+        u = u.reshape((3, 1))
+    
+        # CAUTION: since ps is an array of vectors, pp should be the dot
+        # product of each vector with u to obtain an array of scalars, then
+        # multiply each scalar with u to form an array of vectors.
+        pp = np.matmul(u, np.matmul(u.T, ps))
+        pv = ps - pp
+
+        # CAUTION: numpy uses the last axis to define vectors in the cross 
+        # product with arrays of vectors
+        u_x_cross = np.cross(u.T, ps.T).T
+        
+        rps = pp + pv * np.cos(angle) + u_x_cross * np.sin(angle)
+    
+        return rps
+
+
+def angle_axis_to_rotation_matrix(u):
+    '''
+    Convert angle-axis representation of rotation to a rotation matrix, using
+    the Rodrigues formula.
+    
+    CAUTION: For numerical stability, small angle rotations are considered
+    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
+    '''
+    
+    angle = np.linalg.norm(u)
+    
+    I = np.identity(3)
+    
+    if angle < EPSILON:
+        
+        return I
+    
+    else:
+    
+        # normalize the axis vector
+        u = u / np.linalg.norm(u)
+        
+        
+        ux = vector_to_skew_symmetric_matrix(u)
+        
+        uut = np.matmul(u.reshape((3, 1)), u.reshape(1, 3))
+        
+        
+        R = I * cos(angle) + ux * sin(angle) + uut * (1 - cos(angle))
+    
+        return R
+
+
+def rotation_matrix_to_angle_axis(R):
+    '''
+    Convert a rotation matrix to an angle-axis representation.
+    
+    NOTE: The returned rotation angle is between 0 and pi.
+    
+    CAUTION: For numerical stability, small angle rotations are considered
+    as no rotation.
+    
+    CAUTION: In the degenerated case, where the rotation angle is zero, the
+    axis is set to (0, 0, 1), i.e., the z-axis.
+    
+    '''
+    
+    # TODO: this might be buggy!!!
+    
+    # Check the determinant of R! It must be 1.
+    assert fabs(np.linalg.det(R) - 1) < EPSILON
+    assert np.allclose(np.matmul(R, R.T), np.identity(3))
+
+    
+    
+    if np.allclose(R, np.identity(3)):
+        
+        u = np.asarray((0, 0, 0))
+    
+    else:
+        
+        angle = acos((np.trace(R) - 1) / 2)
+        
+        s = 2 * sin(angle)
+        
+        x = (R[2, 1] - R[1, 2]) / s
+        y = (R[0, 2] - R[2, 0]) / s
+        z = (R[1, 0] - R[0, 1]) / s
+    
+        u = np.asarray((x, y, z))
+        u = u / np.linalg.norm(u)
+        u = u * angle
+    
+    return u
+
+
+
+
+
+
 # --------------------- Euler angles ------------------
 
 
@@ -162,10 +406,10 @@ def rotation_matrix_to_euler_angles_zyx(R):
         # cos(y) != 0, gimbal lock
     
         # CAUTION: y is always pi/2, and z is always 0
-        y = pi / 2
+        y = copysign(pi / 2, -R[2, 0])
     
-        x = atan2(R[0, 1], R[0, 2])
-        z = 0
+        x = 0
+        z = atan2(R[0, 1], R[0, 2])
         
         gimbal_lock = True
         
@@ -191,48 +435,43 @@ def rotation_matrix_to_euler_angles_zyx(R):
 
 
 
-# def euler_zyx_to_quaternion(z, y, x):
-#     
-#     
-#     pass
 
-
-def rotate_a_point_by_rotation_matrix(R, x):
+def rotate_a_point_by_rotation_matrix(R, p):
     '''
-    Rotate a point "x" by a rotation matrix "R". "x" must be a numpy array
+    Rotate a point "p" by a rotation matrix "R". "p" must be a numpy array
     of three elements. "R" must be a numpy 3-by-3 matrix. The result is a
-    numpy array of three elements, same as the input "x".
+    numpy array of three elements, same as the input "p".
     
     CAUTION: This function does not validate whether R is really a rotation
     matrix. It just do the following operations.
     
-        xp = np.matmul(R, x.reshape(3, 1))
+        rp = np.matmul(R, p.reshape(3, 1))
         
-        return np.asarray(xp)
+        return rp.flatten()
     
     '''
-    xp = np.matmul(R, x.reshape(3, 1))
+    rp = np.matmul(R, p.reshape(3, 1))
 
-    return np.asarray(xp)
+    return rp.flatten()
 
-def rotate_points_by_rotation_matrix(R, x):
+def rotate_points_by_rotation_matrix(R, ps):
     '''
-    Rotate points array "x" by a rotation matrix "R". "x" must be a numpy 
+    Rotate points array "ps" by a rotation matrix "R". "ps" must be a numpy 
     3-by-n matrix where. "R" must be a numpy 3-by-3 matrix. The result is
-    a numpy 3-by-n matrix, same as the input "x".
+    a numpy 3-by-n matrix, same as the input "ps".
 
     CAUTION: This function does not validate whether R is really a rotation
     matrix. It just do the following operations.
     
-        xp = np.matmul(R, x)
+        rps = np.matmul(R, ps)
         
-        return xp
+        return rps
     
     '''
     
-    xp = np.matmul(R, x)
+    rps = np.matmul(R, ps)
 
-    return xp
+    return rps
 
 def normalize_rotation_matrix(R):
     '''
@@ -399,244 +638,6 @@ def rotation_matrix_from_zx(z, x):
 
 
 
-# --------------------- angle-axis / alt-azimuth-angle --------------------
-
-
-def alt_azimuth_to_axis(alt_degree, azimuth_degree):
-    '''
-    Calculate an axis represented by a unit vector using alt and azimuth 
-    angles.
-    
-    NOTE: alt and azimuth are in degree, not radian. The output axis
-    is always a unit vector.
-    '''
-    
-    alt_radian = alt_degree * np.pi / 180
-    azimuth_radian = azimuth_degree * np.pi / 180
-    
-    ux = cos(alt_radian) * cos(azimuth_radian)
-    uy = cos(alt_radian) * sin(azimuth_radian)
-    uz = sin(alt_radian)
-    
-    u = np.asarray((ux, uy, uz))
-    u = u / np.linalg.norm(u)
-
-    return u
-
-def axis_to_alt_azimuth(u):
-    '''
-    Calculate the alt and azimuth angles from an axis vector "u".
-    
-    NOTE: alt and azimuth are in degree, not radian.
-    
-    CAUTION: In the degenerated case, where the norm of the vector u is zero,
-    i.e., the vector u is pointting to the z-axis or the opposite of the 
-    z-axis, the output alt is set to plus/minus 90 degrees and the azimuth to
-    zero degrees.
-    
-    '''
-    
-    n_norm = np.linalg.norm(u)
-    
-    if fabs(fabs(n_norm) - 1) < EPSILON:
-        
-        degenerated = True
-
-        alt = 90
-        azimuth = 0
-        
-        gimbal_lock = False
-        
-    else:
-        
-        degenerated = False
-    
-        if fabs(u[2] - 1) < EPSILON:
-            
-            # CAUTION: if u is pointing to the z-axis, the result is degenerated,
-            # i.e., azimuth is undefined.
-            
-            alt = 90
-            azimuth = 0
-            
-            gimbal_lock = True
-            
-        elif fabs(u[2] + 1) < EPSILON:
-            
-            # Similarly, if u is pointing to the opposite of the z-axis, azimuth is
-            # also undefined.
-            
-            alt = -90
-            azimuth = 0
-    
-            gimbal_lock = True
-            
-        else:
-            
-            alt = asin(u[2])
-            
-            c = cos(alt)
-            
-            dx = u[0] / c
-            dy = u[1] / c
-    
-            azimuth = atan2(dy, dx)
-            
-            alt = alt * 180 / pi
-            azimuth = azimuth * 180 / pi
-            
-            gimbal_lock = False
-
-    return alt, azimuth, gimbal_lock, degenerated
-
-def rotate_a_point_by_angle_axis(x, u):
-    '''
-    Rotate a point "x" along the axis "u" by an angle which is the norm of "u".
-    Both "x" and "u" are numpy arrays of three elements.
-    
-    CAUTION: For numerical stability, small angle rotations are considered
-    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
-    
-    '''
-
-    # TODO: test this, it might be buggy.
-    
-
-    angle = np.linalg.norm(u)
-
-    if fabs(angle) < EPSILON:
-        
-        return x
-    
-    else:
-
-        # normalize the axis vector
-        u = u / np.linalg.norm(u)
-    
-        xp = np.dot(x, u) * u
-        xv = x - xp
-        
-        u_x_cross = np.cross(u, x)
-        
-        result = xp + xv * np.cos(angle) + u_x_cross * np.sin(angle)
-    
-        return result
-
-def rotate_points_by_angle_axis(x, u):
-    '''
-    Rotate points "x" along the axis "u" by an angle which is the norm of "u".
-    "x" must a numpy 3-by-n array, and u must a numpy array of three elements.
-    
-    CAUTION: For numerical stability, small angle rotations are considered
-    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
-    
-    CAUTION: The input "x" is now an array of vectors, where each vector is a
-    column.
-    
-    '''
-
-    angle = np.linalg.norm(u)
-
-    if fabs(angle) < EPSILON:
-        
-        return x
-    
-    else:
-
-        # normalize the axis vector
-        u = u / np.linalg.norm(u)
-    
-        u = u.reshape((3, 1))
-    
-        # CAUTION: since x is an array of vectors, xp should be the dot
-        # product of each vector with u to obtain an array of scalars, then
-        # multiply each scalar with u to form an array of vectors.
-        xp = np.matmul(u, np.matmul(u.T, x))
-        xv = x - xp
-
-        # CAUTION: numpy uses the last axis to define vectors in the cross 
-        # product with arrays of vectors
-        u_x_cross = np.cross(u.T, x.T).T
-        
-        result = xp + xv * np.cos(angle) + u_x_cross * np.sin(angle)
-    
-        return result
-
-
-def angle_axis_to_rotation_matrix(u):
-    '''
-    Convert angle-axis representation of rotation to a rotation matrix, using
-    the Rodrigues formula.
-    
-    CAUTION: For numerical stability, small angle rotations are considered
-    as no rotation (i.e., if angle < 1e-6 radian, angle is considered as zero).
-    '''
-    
-    angle = np.linalg.norm(u)
-    
-    I = np.identity(3)
-    
-    if angle < EPSILON:
-        
-        return I
-    
-    else:
-    
-        # normalize the axis vector
-        u = u / np.linalg.norm(u)
-        
-        
-        ux = vector_to_skew_symmetric_matrix(u)
-        
-        uut = np.matmul(u.reshape((3, 1)), u.reshape(1, 3))
-        
-        
-        R = I * cos(angle) + ux * sin(angle) + uut * (1 - cos(angle))
-    
-        return R
-
-
-def rotation_matrix_to_angle_axis(R):
-    '''
-    Convert a rotation matrix to an angle-axis representation.
-    
-    NOTE: The returned rotation angle is between 0 and pi.
-    
-    CAUTION: For numerical stability, small angle rotations are considered
-    as no rotation.
-    
-    CAUTION: In the degenerated case, where the rotation angle is zero, the
-    axis is set to (0, 0, 1), i.e., the z-axis.
-    
-    '''
-    
-    # Check the determinant of R! It must be 1.
-    assert fabs(np.linalg.det(R) - 1) < EPSILON
-
-    angle = acos((np.trace(R) - 1) / 2)
-    
-    if fabs(angle) < EPSILON:
-        
-        angle = 0
-        u = np.asarray((0, 0, 1))
-    
-    else:
-        
-        # for numerical stability, using eigen decomposition may be better.
-        
-        s = 2 * sin(angle)
-        
-        x = (R[2, 1] - R[1, 2]) / s
-        y = (R[0, 2] - R[2, 0]) / s
-        z = (R[1, 0] - R[0, 1]) / s
-    
-        u = np.asarray((x, y, z))
-        u = u / np.linalg.norm(u)
-    
-    return (u, angle)
-
-
-
 
 
 # --------------------- quaternion ----------------------------
@@ -647,7 +648,7 @@ class Quaternion(object):
     The class representing a quaternion in Hamiltonian convention.
     
     NOTE: The Quaternion object is designed to be immutable after construction.
-    
+        
     '''
 
 
@@ -827,6 +828,9 @@ class Quaternion(object):
 
         return Quaternion(self.w * a, -self.x * a, -self.y * a, -self.z * a)
 
+    def negate(self):
+        
+        return Quaternion(-self.w, -self.x, -self.y, -self.z)
     
     def to_angle_axis(self):
         '''
@@ -917,7 +921,7 @@ class Quaternion(object):
         
         return M
 
-    def rotate_point(self, p):
+    def rotate_a_point(self, p):
         '''
         Rotate a single 3D point based on this quaternion. The input point is
         a numpy array of three element. 
