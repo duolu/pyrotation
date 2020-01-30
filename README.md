@@ -139,11 +139,11 @@ First, import the pyrotation module.
 
 	>>> import pyrotation
 
-For angle-axis, Euler angles, and rotation matrix, they use just builtin Python types and Numpy types, i.e., no custom class are defined. For quaternion, a custome `Quaternion` class is defined.
+For angle-axis, Euler angles, and rotation matrix, they use just built-in Python types and Numpy types, i.e., no custom class are defined. Hence, a set of function operating on built-in and numpy types are provided. For quaternion, a custome `Quaternion` class is defined and all operations on a quaternion are methods of the class or object.
 
 ### Handling Singularity
 
-This module defines a value `EPSILON`, which is considered as the precision required for floating point comparison. For example, if a floating point number `a` is less than `EPSILON`, `a` is considered as zero when handling singularity. In the following documentation, "if `a` is zero" generally means "if `a` is less than `EPSILON`" in the code.
+This module defines a value `EPSILON`, which is considered as the precision required for floating point comparison (typically 1e-6). For example, if a floating point number `a` is less than `EPSILON`, `a` is considered as zero when handling singularity. In the following documentation, "if `a` is zero" generally means "if `a` is less than `EPSILON`" in the code.
 
 ### Angle-Axis
 
@@ -153,19 +153,32 @@ This module defines a value `EPSILON`, which is considered as the precision requ
 
 * Use the `rotate_a_point_by_angle_axis(p, u) -> rp` function to rotate a point `p` by an angle-axis rotaion `u` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
 
-* Use the `rotate_points_by_angle_axis(ps, u) - rps` function to rotate points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+* Use the `rotate_points_by_angle_axis(ps, u) - rps` function to rotate an array of points `ps` by an angle-axix rotation `u` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
 
 * Use the `angle_axis_to_rotation_matrix(u) -> R` function to convert an angle-axis `u` to a rotation matrix `R`. If the length of `u` is zero, the identity matrix is returned.
 
-* Use the `rotation_matrix_to_angle_axis(R) -> u` function to convert a rotation matrix `R` to an angle-axis `u`. If `R` is the identity matrix, `u` is all zero.
+* Use the `rotation_matrix_to_angle_axis(R) -> u` function to convert a rotation matrix `R` to an angle-axis `u`. If `R` is the identity matrix, `u` is all zero, i.e., degenerated.
 
 ### Euler Angles
 
-// TODO
+* Use the `euler_zyx_to_rotation_matrix(z, y, x) -> R` function to convert the (yaw, pitch, roll) angles in radian to a rotation matrix `R`. The three angles are in this order: z-yaw, y-pitch, x-roll.
+
+* Use the `rotation_matrix_to_euler_angles_zyx(R) -> (z, y, x, gimbal_lock)` function to convert a rotation matrix to the (yaw, pitch, roll) angles. If the rotation matrix represents a rotation corresponding to a pitch angle of -pi/2 degree or +pi/2 radian, i.e., `R[2, 0]` is +1 or -1, the `gimbal_lock` flag is set to `True`. In this case, roll angle is always set to 0.
 
 ### Rotation Matrix
 
-// TODO
+* Use the `rotate_a_point_by_rotation_matrix(R, p) -> rp` function to rotate a point `p` by a rotation matrix `R` to obtain the rotated point `rp`. Both `p` and `rp` are numpy 3-dimensional arrays.
+
+
+* Use the `rotate_points_by_rotation_matrix(R, ps) -> rps` function to rotate an array of points `ps` by a rotation matrix `R` to obtain the rotated points `rps`. Both `ps` and `rps` are numpy 3-by-n matrix where n is the number of points.
+
+
+* `normalize_rotation_matrix(R) -> Rn`
+
+
+* `rotation_matrix_from_orthonormal_basis(ux, uy, uz) -> R`
+
+* `orthonormal_basis_from_two_vectors(v1, v2, v1_default, v2_default) -> (u1, u2, u3)`
 
 ### Unit Quaternion
 
