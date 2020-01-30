@@ -10,7 +10,7 @@ See the [slides](https://docs.google.com/presentation/d/1Xv72RjoL_4scx613WTR3YDf
 
 ## pyrotation_demo.py
 
-The **pyrotation_demo** module provides four interactive GUI visualizers based on the matplotlib, corresponding to the four representations of the 3D rotation. Users can drag sliders to directly change parameters of the representation and the corresponding rotation of reference frame is shown in real-time. 
+The **pyrotation_demo** module provides four interactive GUI visualizers based on the matplotlib, corresponding to the four representations of the 3D rotation implemented in the **pyrotation** module. Users can drag sliders to directly change parameters of the representation and the corresponding rotation of reference frame is shown in real-time. This demo is mainly made for learning how 3D rotation work.
 
 This module requires numpy, matplotlib, and the **pyrotation** module. 
 
@@ -19,12 +19,12 @@ This module requires numpy, matplotlib, and the **pyrotation** module.
 
 The **pyrotation** module provides four different representations of a 3D rotation as well as corresponding operations on these representations:
 
-* **Angle-axis** - represented as a numpy 3-dimensional vector **u**, where its direction is the axis and its length is the angle (could be negative). The rotation follows the right-hand rule.
-* **Euler angles** (in z-y'-x" intrinsic convention) - represented as a tuple of three angles (z, y, x). These angles are also called Tait-Bryan angles, or (yaw, pitch, roll) angles.
+* **Angle-axis** - represented as a numpy 3-dimensional vector **u**, where its direction is the axis and its length is the angle (the angle could be negative, which means the rotation uses the opposite direction of the vector). The rotation follows the right-hand rule.
+* **Euler angles** (in z-y'-x" intrinsic convention) - represented as a tuple of three angles (z, y, x). These angles are also called Tait-Bryan angles, or (yaw, pitch, roll) angles. There are other conventions of Euler angles and only this specific notation is implemented and used in the demo.
 * **Rotation matrix** - represented as a numpy 3-by-3 matrix **R**.
-* **Unit quaternion** - represented as an object **q** of a custom quaternion class defined in the pyrotation module.
+* **Unit quaternion** - represented as an object **q** of a custom quaternion class defined in the pyrotation module. The quaternion is in Hamiltonian convetion, i.e., (qw, qx, qy, qz).
 
-This module requires numpy. 
+This module requires numpy. In all cases, coordinate of a 3D point is represented as a numpy 3-dimensional vector. Array of 3D points is represented as numpy 3-by-n matrix, where n is the number of points. The coordinate reference frame is right-handed.
 
 
 # Getting Started
@@ -50,13 +50,16 @@ For example, if the following command is used,
 
 	$ python3 ./pyrotation_demo.py q
 
-Then the demo with quaternion is shown.
+Then the demo with quaternion is shown. In all demoes, the x-axis is in red color, the y-axis is in green color, the z-axis is in blue color. The three axes of the original reference frame are represented in dashed lines with black and color alternation, and the rotated reference frame are represented in solid lines with colors. A solid disk on the XOY plane in the original reference frame is shown to represent the "ground"
 
 ### Demo of Angle-Axis Representation of a 3D Rotation
 
 ![angle-axis annotation.](figures/angle_axis_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
-The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used.
+In the demo GUI, the rotation axis is represented in a dotted and dashed line through the origin. The rotation vector, i.e., the vector **u**, is shown as a solid black arrow on the axis. The projection of the axis on the ground is shown as a dotted line. Besides, a dashed circle is shown, where the rotation axis is through the center of the circle and perpendicular to the plane of the circle. Two dashed arrows are on this plane pointing from the center of the circle to the original and rotated x-axis. On the circle, a red arc with arrow shows the rotation angle, pointing from the original x-axis to the rotated x-axis. Together they show the conic shape of rotating a vector or point along an axis. Note that this axis is always throught the origin. An arbitrary rotation with an axis not going through the origin can be decomposed into a translation from a point on the axis to the origin, a rotation with an axis through the origin, and another translation back to the point.
+
+The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown).
+
 
 ### Demo of Euler Angles Representation of a 3D Rotation
 
