@@ -66,7 +66,7 @@ Some common explanations of the demo GUI are shown as follows.
 
 ### Demo of Angle-Axis Representation of a 3D Rotation
 
-![angle-axis annotation.](figures/angle_axis_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
+![angle-axis annotation.](figures/angle_axis_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/angle_axis.gif" width="350">
 
 Explanations:
 
@@ -76,12 +76,12 @@ Explanations:
 
 1. Note that this axis is always throught the origin. An arbitrary rotation with an axis not going through the origin can be decomposed into a translation from a point on the axis to the origin, a rotation with an axis through the origin, and another translation back to the point.
 
-1. The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown). The rotation angle is in `[-180, +180]` degrees, the alt angle is in in `[-90, +90]` degrees, and the azimuth angle is in `[-180, +180]` degrees.
+1. The rotation angle and the rotation axis can be directly controlled by the three sliders. Note that to control the axis, alt-azimuth angles of the axis are used. Thus, even in the degenerated case, where the rotation angle is zero, the axis can still be defined using the alt-azimuth angles (the dotted line representing the projection of the axis on the ground is calculated by the azimuth angle, so even the axis is pointing to perpendicular to the ground, this dotted line is still defined and shown). The rotation angle is in `[-180, +180]` degrees, the alt angle is in `[-90, +90]` degrees, and the azimuth angle is in `[-180, +180]` degrees.
 
 
 ### Demo of Euler Angles Representation of a 3D Rotation
 
-![euler annotation.](figures/euler_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
+![euler annotation.](figures/euler_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/euler.gif" width="350">
 
 Explanations:
 
@@ -97,14 +97,26 @@ Explanations:
 
 ### Demo of Rotation Matrix Representation of a 3D Rotation
 
-![rotation matrix annotation.](figures/rotation_matrix_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
+![rotation matrix annotation.](figures/rotation_matrix_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/rotation_matrix.gif" width="350">
 
-The three basis vectors of the rotated reference frame can be directly controlled (i.e., the three columns of the rotation matrix). Note that they are three orthonormal vectors and hence, two of them are enough to uniquely determine the rotation. This demo program provides three modes: (1) "ux-uy", i.e., manipulating the new x-axis and y-axis, (2) "uy-uz", i.e., manipulating the new y-axis and z-axis, (3) "uz-ux", i.e., manipulating the new z-axis and x-axis. It is generally difficult to directly manipulate 3D vectors through the UI, instead, this demo program uses alt-azimuth angles to control the direction of the basis vectors (they are unit vectors so direction would be enough and the length does not matter).
+Explanations:
+
+1. To construct a rotation matrix, three orthonormal basis vectors of the rotated reference frame are needed. However, since these three basis vectors are orthonormal, once two vectors are given (or one plane and a vector on the plane are given), the three basis vectors and the rotation matrix can be uniquely determined. This demo provides three modes:
+
+	1. "ux-uy", where the "ux" vector is the x-axis of the rotated reference frame, and "ux" and "uy" vectors together defines the XOY plane of the rotated reference frame. This plane is shown as a dashed circle. In this mode, "ux" is shown as a solid red line (i.e., the x-axis after rotation), and "uy" is shown as a dashed green line.
+	
+	1. "uy-uz", where "uy" vector is the y-axis of the rotated reference frame, and "uy" and "uz" vectors together defines the YOZ plane of the rotated reference frame. This plane is shown as a dashed circle. In this mode, "uy" is shown as a solid green line (i.e., the y-axis after rotation), and "uz" is shown as a dashed blue line.
+	
+	1. "uz-ux", where "uz" vector is the z-axis of the rotated reference frame, and "uz" and "ux" vectors together defines the ZOX plane of the rotated reference frame. This plane is shown as a dashed circle. In this mode, "uz" is shown as a solid blue line (i.e., the z-axis after rotation), and "ux" is shown as a dashed red line.
+
+1. The three basis vectors of the rotated reference frame can be directly controlled using the sliders. Since they are all unit vectors (i.e., only the directions are important and their length do not matter), this demo program uses alt-azimuth angles to control them. In each mode, two vectors can be controlled and changing the third vector has no effect.
+
+1. The projection of the two control vectors on the ground are shown as dotted lines with their corresponding colors. They are derived from the azimuth angles. The alt angles are in `[-90, +90]` degrees, and the azimuth angles are in `[-180, +180]` degrees.
 
 
 ### Demo of Quaternion Representation of a 3D Rotation
 
-![quaternion annotation.](figures/quaternion_annotated.png) <img src="https://github.com/duolu/pyrotation/blob/master/figures/quaternion.gif" width="350">
+![quaternion annotation.](figures/quaternion_annotated.png)                <img src="https://github.com/duolu/pyrotation/blob/master/figures/quaternion.gif" width="350">
 
 The four components of the unit quaternion can be directly controlled by the four sliders. Note that since it is a the four components are coupled and the user can not change one component without influence to others. This demo program provides two manipulations in general: (1) Changing the rotation angle while maintaining the axis, by manipulating qw, or (2) Changing the axis direction while maintaining the angle, by manipulating qx, qy, qz and setting qw to 0.
 
