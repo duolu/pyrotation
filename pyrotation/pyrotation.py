@@ -1076,36 +1076,39 @@ class Quaternion(object):
         wz = (R[1, 0] - R[0, 1]) / 4
                 
         
-        if x2 >= w2 and x2 >= y2 and x2 >= z2:
+        if R[2, 2] < 0:
         
-            # x2 is the largest, so x must be greater than 0.5
-            x = sqrt(x2)
-            w = wx / x
-            y = xy / x
-            z = xz / x
-        
-        elif y2 >= w2 and y2 >= x2 and y2 >= z2:
-        
-            y = sqrt(y2)
-            w = wy / y
-            x = xy / y
-            z = yz / y
-
-        elif z2 >= w2 and z2 >= x2 and z2 >= y2:
+            if R[0, 0] > R[1, 1]:
+          
+                x = sqrt(x2)
+                w = wx / x
+                y = xy / x
+                z = xz / x
+          
+            else:
+              
+                y = sqrt(y2)
+                w = wy / y
+                x = xy / y
+                z = yz / y
+  
+        else:
             
-            z = sqrt(z2)
-            w = wz / z
-            x = xz / z
-            y = yz / z
-        
-        else: # w2 >= x2 and w2 >= y2 and w2 >= z2:
-
-            w = sqrt(w2)
-            x = wx / w
-            y = wy / w
-            z = wz / w
-        
-        return w, x, y, z
+            if R[0, 0] < -R[1, 1]:
+                
+                z = sqrt(z2)
+                w = wz / z
+                x = xz / z
+                y = yz / z
+          
+            else:
+  
+                w = sqrt(w2)
+                x = wx / w
+                y = wy / w
+                z = wz / w
+          
+        return w * 0.5, x * 0.5, y * 0.5, z * 0.5
 
     @staticmethod
     def quaternion_to_rotation_matrix(w, x, y, z):
@@ -1180,7 +1183,7 @@ class Quaternion(object):
         
         w, x, y, z = cls.rotation_matrix_to_quaternion(R)
         q = cls(w, x, y, z)
-        q = q.normalize()
+        
         
         return q
 
