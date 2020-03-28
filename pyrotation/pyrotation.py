@@ -1062,53 +1062,58 @@ class Quaternion(object):
         # Check the determinant of R! It must be 1.
         assert math.isclose(np.linalg.det(R), 1, abs_tol=EPSILON)
         
-        w2 = (1 + R[0, 0] + R[1, 1] + R[2, 2]) / 4
-        x2 = (1 + R[0, 0] - R[1, 1] - R[2, 2]) / 4
-        y2 = (1 - R[0, 0] + R[1, 1] - R[2, 2]) / 4
-        z2 = (1 - R[0, 0] - R[1, 1] + R[2, 2]) / 4
-        
-        yz = (R[1, 2] + R[2, 1]) / 4
-        xz = (R[2, 0] + R[2, 2]) / 4
-        xy = (R[0, 1] + R[1, 0]) / 4
-
-        wx = (R[2, 1] - R[1, 2]) / 4
-        wy = (R[0, 2] - R[2, 0]) / 4
-        wz = (R[1, 0] - R[0, 1]) / 4
-                
-        
+        w2 = (1 + R[0, 0] + R[1, 1] + R[2, 2])
+        x2 = (1 + R[0, 0] - R[1, 1] - R[2, 2])
+        y2 = (1 - R[0, 0] + R[1, 1] - R[2, 2])
+        z2 = (1 - R[0, 0] - R[1, 1] + R[2, 2])
+            
+        yz = (R[1, 2] + R[2, 1])
+        xz = (R[2, 0] + R[0, 2])
+        xy = (R[0, 1] + R[1, 0])
+    
+        wx = (R[2, 1] - R[1, 2])
+        wy = (R[0, 2] - R[2, 0])
+        wz = (R[1, 0] - R[0, 1])
+                    
+            
         if R[2, 2] < 0:
-        
-            if R[0, 0] > R[1, 1]:
           
+            if R[0, 0] > R[1, 1]:
+            
                 x = sqrt(x2)
                 w = wx / x
                 y = xy / x
                 z = xz / x
-          
+            
             else:
-              
+                 
                 y = sqrt(y2)
                 w = wy / y
                 x = xy / y
                 z = yz / y
-  
+    
         else:
-            
+              
             if R[0, 0] < -R[1, 1]:
-                
+                 
                 z = sqrt(z2)
                 w = wz / z
                 x = xz / z
                 y = yz / z
-          
+            
             else:
-  
+                 
                 w = sqrt(w2)
                 x = wx / w
                 y = wy / w
                 z = wz / w
-          
-        return w * 0.5, x * 0.5, y * 0.5, z * 0.5
+        
+        w = w * 0.5
+        x = x * 0.5
+        y = y * 0.5
+        z = z * 0.5
+        
+        return w, x, y, z
 
     @staticmethod
     def quaternion_to_rotation_matrix(w, x, y, z):
