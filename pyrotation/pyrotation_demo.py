@@ -220,7 +220,7 @@ class RotationVisualizer3D(object):
             
             angle = -2 * np.pi
     
-        a = np.linspace(start, start + angle, fabs(angle) // step)
+        a = np.linspace(start, start + angle, int(fabs(angle) // step))
 
         return a
     
@@ -244,8 +244,8 @@ class RotationVisualizer3D(object):
             
             angle = -2 * np.pi
 
-        rs = np.linspace(0, r, r // 0.1)
-        ps = np.linspace(start, start + angle, fabs(angle) // 0.1)
+        rs = np.linspace(0, r, int(r // 0.1))
+        ps = np.linspace(start, start + angle, int(fabs(angle) // 0.1))
         RS, PS = np.meshgrid(rs, ps)
     
         return RS, PS
@@ -362,7 +362,7 @@ class RotationVisualizer3D(object):
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
-        ax.set_aspect('equal')
+        #ax.set_aspect('equal')
 
     pass
 
@@ -502,8 +502,8 @@ class AngleAxisVisualizer3D(RotationVisualizer3D):
 
 
         # Plot the original XOY plane.
-        self.plot_disk(self.ax3d, I, O, r, 
-                       plane='xoy', color='w', method='R')
+        #self.plot_disk(self.ax3d, I, O, r, 
+        #               plane='xoy', color='w', method='R')
         self.plot_circle(self.ax3d, I, O, r, 
                          plane='xoy', style='-', color='k', method='R')
 
@@ -705,7 +705,7 @@ class EulerZYXVisualizer3D(RotationVisualizer3D):
 
 
         # Plot the original XOY plane.
-        self.plot_disk(self.ax3d, I, O, r, plane='xoy', color='w')
+        #self.plot_disk(self.ax3d, I, O, r, plane='xoy', color='w')
         self.plot_circle(self.ax3d, I, O, r, plane='xoy', style='-', color='k')
         
         
@@ -1112,7 +1112,7 @@ class RotationMatrixVisualizer3D(RotationVisualizer3D):
                                 cx='r', cy='g', cz='b', arrow=False)
 
         # Plot the original XOY plane.
-        self.plot_disk(self.ax3d, I, O, r, plane='xoy', color='w')
+        #self.plot_disk(self.ax3d, I, O, r, plane='xoy', color='w')
         self.plot_circle(self.ax3d, I, O, r, plane='xoy', style='-', color='k')
 
 
@@ -1390,8 +1390,8 @@ class QuaternionVisualizer3D(RotationVisualizer3D):
         #nu = np.linalg.norm(u)
 
         # Plot the original XOY plane.
-        self.plot_disk(self.ax3d, qi, O, r, 
-            plane='xoy', color='w', method='q')
+        #self.plot_disk(self.ax3d, qi, O, r, 
+        #    plane='xoy', color='w', method='q')
         self.plot_circle(self.ax3d, qi, O, r, 
             plane='xoy', style='-', color='k', method='q')
 
