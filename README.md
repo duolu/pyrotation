@@ -4,7 +4,7 @@ This repository is a Python package to help teach and learn the math of 3D rotat
 * [pyrotation_demo.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation_demo.py) - contains GUI based interactive demo of 3D rotation of reference frame.
 * [pyrotation.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation.py) - contains the core class and routines for representation and operation of 3D rotation.
 
-Both modules are tested on Python 3.5/3.6, NumPy 1.19, Matplotlib 3.1.2.
+Both modules are tested on Python 3.6, NumPy 1.19, Matplotlib 3.1.2.
 
 See the [slides](https://docs.google.com/presentation/d/1Xv72RjoL_4scx613WTR3YDfh70VPxslJ42-XyDsqbac/edit?usp=sharing) to learn the representations of 3D rotation.
 
