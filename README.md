@@ -4,7 +4,7 @@ This repository is a Python package to help teach and learn the math of 3D rotat
 * [pyrotation_demo.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation_demo.py) - contains GUI based interactive demo of 3D rotation of reference frame.
 * [pyrotation.py](https://github.com/duolu/pyrotation/blob/master/pyrotation/pyrotation.py) - contains the core class and routines for representation and operation of 3D rotation.
 
-Both modules are tested on Python 3.5+.
+Both modules are tested on Python 3.5/3.6, NumPy 1.19, Matplotlib 3.1.2.
 
 See the [slides](https://docs.google.com/presentation/d/1Xv72RjoL_4scx613WTR3YDfh70VPxslJ42-XyDsqbac/edit?usp=sharing) to learn the representations of 3D rotation.
 
@@ -143,7 +143,7 @@ For angle-axis, Euler angles, and rotation matrix, they use just built-in Python
 
 ### Handling Singularity
 
-This module defines a value `EPSILON`, which is considered as the precision required for floating point comparison (typically 1e-6). For example, if a floating point number `a` is less than `EPSILON`, `a` is considered as zero when handling singularity. In the following documentation, "if `a` is zero" generally means "if `a` is less than `EPSILON`" in the code.
+This module defines a value `EPSILON`, which is considered as the precision required for floating point comparison (typically 1e-6). For example, if the absolute value of a floating point number `a` is less than `EPSILON`, `a` is considered as zero when handling singularity. In the following documentation, "if `a` is zero" generally means "if the absolute value of `a` is less than `EPSILON`" in the code.
 
 ### Angle-Axis
 
